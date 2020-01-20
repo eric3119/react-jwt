@@ -1,3 +1,49 @@
+Endpoints
+App
+http://172.16.130.252:8000/digitalizacao/
+
+Exemplo:
+
+[
+    {
+        "id": 1,
+        "numero": "200",
+        "ano": 2018,
+        "descricao": "TESTE DE DIGITALIZAÇAO",
+        "arquivo": "http://172.16.130.252:8000/media/pdf/Juntada.pdf",
+        "data": "2020-01-07T14:38:18.329806Z"
+    }
+]
+
+
+Autenticacao
+http://172.16.130.252:8000/token/
+
+Renovação do Token
+http://172.16.130.252:8000/refresh-token/
+
+Usuários
+
+JWT user para Visualização
+usuario: usuario_visualizacao
+senha: Visualizador1234
+
+JWT user para Atualização
+usuario: usuario_atualizacao
+senha: Atualizacao1234
+
+JWT user para Cadastro
+usuario: usuario_insercao
+senha: Insercao1234
+
+
+Observações:
+- Tempo de expiração e renovação do Token (2 minutos)
+- Tempo total de renovação do Token (15 dias)
+- No uso do Token adicionar a sigla JWT antes
+  Exemplo: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6InVzdWFyaW9fdmlzdWFsaXphY2FvIiwiZXhwIjoxNTc4NDEzNjQyLCJlbWFpbCI6IiIsIm9yaWdfaWF0IjoxNTc4NDEzMzQyfQ.Bx7TcTfTNZdEh7xzSAugvEhVqiOa1EjQPOZ2zakH4ns
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
