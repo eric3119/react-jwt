@@ -5,13 +5,13 @@ import List from './list/List';
 
 import api from '../../services/api';
 
-class Tasks extends Component {
+class Digitalizacoes extends Component {
 
     constructor(props){
         super(props);
 
         this.state = {
-            tasks: []
+            digitalizacoes: []
         };
 
         this.loadObjects = this.loadObjects.bind(this);
@@ -19,7 +19,7 @@ class Tasks extends Component {
 
     async loadObjects() {
         try {
-            const token = await localStorage.getItem('token');
+            const token = await localStorage.getItem('tokenR');
 
             api.setHeader('Authorization', `JWT ${token}`);
             
@@ -28,8 +28,9 @@ class Tasks extends Component {
             
             if (ok) {
                 console.log(data);
+                console.log(this.state.digitalizacoes);
                 this.setState({
-                    tasks: data,
+                    digitalizacoes: data,
                 });
             } else {
                 console.log(problem, data);
@@ -55,10 +56,10 @@ class Tasks extends Component {
                         <FontAwesomeIcon icon={faPlus} />
                     </a>
                 </div>
-                <List tasks={this.state.tasks}/>
+                <List digitalizacoes={this.state.digitalizacoes}/>
             </div>
         );
     }
 }
 
-export default Tasks;
+export default Digitalizacoes;

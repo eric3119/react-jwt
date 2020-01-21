@@ -6,7 +6,7 @@ $red: #EE4525;
 .navbar{
   background-color: $dark-grey;
   .navbar-brand{
-    color: $yellow !important;
+    color: white !important;
   }
 }
 
@@ -29,10 +29,6 @@ $red: #EE4525;
       font-weight: 500;
       margin-bottom: 5px;
 
-      .check{
-        color: $yellow;
-        font-size: 15px;
-      }
       .delete{
         color: white;
       }

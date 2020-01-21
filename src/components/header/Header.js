@@ -8,7 +8,7 @@ import React, { Component } from 'react';
          <div>
            <Navbar>
              <Navbar.Brand>
-               <FontAwesomeIcon icon="check-circle" size="lg"/> JWT Test
+                JWT Test
              </Navbar.Brand>
            </Navbar>
          </div>

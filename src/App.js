@@ -15,9 +15,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap'
 
 import Header from './components/header/Header';
-import Tasks from './components/tasks/Tasks';
+import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
-import CreateTask from './components/tasks/create_task/CreateTask';
+import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
+import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
 
 library.add(faCheckCircle, faTrashAlt);
 
@@ -79,10 +80,11 @@ export default class App extends Component {
                   <Auth />
                 </Route>
                 <Route path="/novo">
-                  <CreateTask />
+                  <CreateDigitalizacao />
                 </Route>
+                <Route path="/update/:_id/" component={UpdateDigitalizacao} />
                 <Route path="/">
-                  <Tasks />
+                  <Digitalizacoes />
                 </Route>
               </Switch>
             </Container>
