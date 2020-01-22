@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import api from '../../../services/api';
 
-import {
-    useParams
-} from "react-router-dom";
-
 import { Form, Button } from 'react-bootstrap';
 
 export default class UpdateDigitalizacao extends Component{
@@ -113,7 +109,7 @@ export default class UpdateDigitalizacao extends Component{
                     <Form.Group controlId="formBasicArquivo">
                         <Form.Label>Arquivo</Form.Label>
                         <div>
-                            atual: {this.state.arquivoModificado? null : this.state.arquivo}
+                            atual: {this.state.arquivoModificado? this.state.arquivo.name : this.state.arquivo}
                         </div>
                         <Form.Control type="file" placeholder="Arquivo"  onChange={
                             (event) => this.setState({ arquivo: event.target.files[0] })

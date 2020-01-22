@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import api from './services/api';
 
 import {
   BrowserRouter as Router,
@@ -22,25 +23,48 @@ import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigita
 
 library.add(faCheckCircle, faTrashAlt);
 
+class Clock extends React.Component {
+  format(time) {
+    let seconds = time % 60;
+    let minutes = Math.floor(time / 60);
+    minutes = minutes.toString().length === 1 ? "0" + minutes : minutes;
+    seconds = seconds.toString().length === 1 ? "0" + seconds : seconds;
+    return minutes + ':' + seconds;
+  }
+  render () {
+    const {time} = this.props;
+    return (
+      <div className="displayedTime">
+        <h1>{this.format(time)}</h1>
+      </div>
+    )
+  }
+}
+
+
 export default class App extends Component {
 
   constructor(props){
     super(props);
 
     this.state = {
-      token: '', 
-      isLoading: true
+      isLoading: true,
+      count: 0,
+      running: false,
     };
 
-    this.getToken = this.getToken.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
-  async getToken(){
-    const token = await localStorage.getItem('token');
-    this.setState({ token });
-  }
+  async componentDidMount(prevProps, prevState){
 
-  async componentDidMount(){
+    if(prevState){
+      if(this.state.running !== prevState.running){
+        if(this.state.running) {
+          this.handleStart();
+        }
+      }
+    }
 
     if (window.location.pathname !== '/login'){
       if(await localStorage.getItem('token') === ''){
@@ -50,15 +74,93 @@ export default class App extends Component {
     this.setState({isLoading:false});
   }
 
+  handleStart() {
+    this.timer = setInterval(() => {
+      const newCount = this.state.count - 1;
+      if(newCount <= 60){
+        this.refreshToken();
+      }
+      this.setState(
+        {count: newCount >= 0 ? newCount : 0}
+      );
+    }, 1000);
+  }
+  
+  handleStop() {
+    if(this.timer) {
+      clearInterval(this.timer);
+      this.setState(
+        {running:false}
+      );
+    }
+  }
+  
+  handleReset() {
+    this.setState(
+      {count: 0}
+    );
+  }
+
+  handleCountdown(seconds) {
+    this.setState({
+      count: seconds,
+      running: true
+    })
+  }
+  
+  async handleRestart(seconds){
+    await this.handleStop();
+    await this.handleReset();
+    await this.handleCountdown(seconds);
+    await this.handleStart();
+  }
+
+  async refreshToken(){
+
+    const tokenC = await localStorage.getItem('tokenC');
+    const tokenR = await localStorage.getItem('tokenR');
+    const tokenU = await localStorage.getItem('tokenU');
+
+    await this.refreshAndStore('tokenC', tokenC);
+    await this.refreshAndStore('tokenR', tokenR);
+    await this.refreshAndStore('tokenU', tokenU);
+
+    this.handleRestart(600);
+  }
+
+  async refreshAndStore(token_name, token){
+    try {
+        const response = await api.post('/refresh-token/', {
+            token
+        });
+        
+        console.log(response);
+        const { data, problem } = response;
+
+        if (data['token']) {
+            console.log(data);
+            await localStorage.setItem(token_name, data['token']);
+        } else {
+            console.log(problem, data);
+        }
+    } catch (err) {
+        const { data, problem } = err;
+        console.log(problem, data);
+    }
+}
+
   render(){
 
     if(this.state.isLoading){
       return <div>loading</div>
     }
 
+    const {count} = this.state;
+
     return (
       <>
         <Header />
+        <Clock time={count}/>
         <Router>
           <div>
             <nav>
@@ -77,7 +179,7 @@ export default class App extends Component {
             <Container>
               <Switch>
                 <Route path="/login">
-                  <Auth />
+                  <Auth startTimer={ (value) => { this.handleRestart(value) } } />
                 </Route>
                 <Route path="/novo">
                   <CreateDigitalizacao />
