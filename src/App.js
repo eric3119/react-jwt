@@ -13,7 +13,7 @@ import {
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Container } from 'react-bootstrap'
+import { Container, Alert } from 'react-bootstrap'
 
 import Header from './components/header/Header';
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
@@ -84,7 +84,11 @@ export default class App extends Component {
     this.timer = setInterval(() => {
       const newCount = this.state.count - 1;
       if(newCount <= 60){
-        this.refreshToken();
+        if(newCount >= 10){
+          this.refreshToken();
+        }else if(window.location.pathname !== "/login"){
+          window.location.assign("/login");
+        }
       }
       this.setState(
         {count: newCount >= 0 ? newCount : 0}
@@ -122,16 +126,24 @@ export default class App extends Component {
   }
 
   async refreshToken(){
+    var r = window.confirm("refresh token");
+    if (r == true) {
+      const tokenC = await localStorage.getItem('tokenC');
+      const tokenR = await localStorage.getItem('tokenR');
+      const tokenU = await localStorage.getItem('tokenU');
 
-    const tokenC = await localStorage.getItem('tokenC');
-    const tokenR = await localStorage.getItem('tokenR');
-    const tokenU = await localStorage.getItem('tokenU');
+      await this.refreshAndStore('tokenC', tokenC);
+      await this.refreshAndStore('tokenR', tokenR);
+      await this.refreshAndStore('tokenU', tokenU);
 
-    await this.refreshAndStore('tokenC', tokenC);
-    await this.refreshAndStore('tokenR', tokenR);
-    await this.refreshAndStore('tokenU', tokenU);
+      const expiration = new Date();
 
-    this.handleRestart(600);
+      await localStorage.setItem("expiration_time", (expiration.getTime() + 600000));
+
+      this.handleRestart(600);
+    } else {
+      this.handleStop();
+    }    
   }
 
   async refreshAndStore(token_name, token){
