@@ -38,10 +38,14 @@ class Auth extends Component{
         await this.authenticateAndStore('tokenC', {username: username_create, password: password_create});
         await this.authenticateAndStore('tokenU', {username: username_update, password: password_update});
 
+        
+        const expiration = new Date();
+
+        await localStorage.setItem("expiration_time", (expiration.getTime() + 600000));
+        
         startTimer(600);
 
         this.props.history.push('/');
-
     }
 
     async authenticateAndStore(token_name, user){

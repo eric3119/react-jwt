@@ -64,6 +64,8 @@ export default class App extends Component {
           this.handleStart();
         }
       }
+    }else{
+      this.handleStart();
     }
 
     if (window.location.pathname !== '/login'){
@@ -74,7 +76,11 @@ export default class App extends Component {
     this.setState({isLoading:false});
   }
 
-  handleStart() {
+  async handleStart() {
+  
+    const remaining_time = parseInt((localStorage.expiration_time - new Date().getTime()) / 1000);
+    await this.setState({ count: remaining_time >= 0 ? remaining_time : 0 })
+    
     this.timer = setInterval(() => {
       const newCount = this.state.count - 1;
       if(newCount <= 60){
