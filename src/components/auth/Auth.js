@@ -3,7 +3,11 @@ import api from '../../services/api';
 
 import { Form, Button } from 'react-bootstrap';
 
-export default class Auth extends Component{
+import {
+	withRouter
+} from 'react-router-dom';
+
+class Auth extends Component{
 
     constructor(props){
         super(props);
@@ -17,10 +21,12 @@ export default class Auth extends Component{
             password_create: 'Insercao1234'
         };
 
-        this.saveToken = this.saveToken.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    async saveToken() {
+    async onSubmit(e) {
+
+        e.preventDefault();
 
         const { startTimer } = this.props;
 
@@ -33,6 +39,8 @@ export default class Auth extends Component{
         await this.authenticateAndStore('tokenU', {username: username_update, password: password_update});
 
         startTimer(600);
+
+        this.props.history.push('/');
 
     }
 
@@ -61,7 +69,7 @@ export default class Auth extends Component{
     render(){
         return (
             <div className="jumbotron my-5">
-                <Form>
+                <Form onSubmit={this.onSubmit}>
                     <Form.Group controlId="formReadEmail">
                         <Form.Label>Username Read</Form.Label>
                         <Form.Control type="text" placeholder="Username Read"  onChange={
@@ -101,7 +109,7 @@ export default class Auth extends Component{
                             (event) => this.setState({ password_create: event.target.value })
                         } value={this.state.password_create} />
                     </Form.Group>
-                    <Button variant="primary" onClick={this.saveToken}>
+                    <Button variant="primary" type="submit">
                         Submit
                     </Button>
                 </Form>
@@ -109,3 +117,5 @@ export default class Auth extends Component{
         );
     }
 }
+
+export default withRouter(Auth);

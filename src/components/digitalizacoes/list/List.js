@@ -3,6 +3,10 @@ import { Row, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import api from '../../../services/api';
 
+import {
+  Link
+} from "react-router-dom";
+
 class List extends Component {
 
   async deleteDigitalizacao(id){
@@ -37,8 +41,14 @@ class List extends Component {
                         <td className="col-md-2">{digitalizacao.ano}</td>
                         <td className="col-md-2">{digitalizacao.descricao}</td>
                         <td className="col-md-2">{digitalizacao.arquivo}</td>
-                        <td className="col-md-2"><button onClick={() => window.location.assign(`update/${digitalizacao.id}/`)} className="btn btn-primary">editar</button></td>
-                        <td className="col-md-2"><button onClick={() => this.deleteDigitalizacao(digitalizacao.id)} className="btn btn-primary">deletar</button></td>
+                        <td className="col-md-2">
+                          <Link to={`update/${digitalizacao.id}/`}  className="btn btn-primary">
+                            editar
+                          </Link>
+                        </td>
+                        <td className="col-md-2">
+                          <button onClick={() => this.deleteDigitalizacao(digitalizacao.id)} className="btn btn-primary">deletar</button>
+                        </td>
                     </tr>;
               })}
             </tbody>

@@ -3,7 +3,11 @@ import api from '../../../services/api';
 
 import { Form, Button } from 'react-bootstrap';
 
-export default class UpdateDigitalizacao extends Component{
+import {
+	withRouter
+} from 'react-router-dom';
+
+class UpdateDigitalizacao extends Component{
 
     constructor(props){
         super(props);
@@ -12,8 +16,8 @@ export default class UpdateDigitalizacao extends Component{
             numero: '',
             ano: '',
             descricao: '',
-            arquivo: '',
-            arquivoModificado: false,
+            arquivo_original: '',
+            arquivo_modificado: null,
         };
 
         this.submitForm = this.submitForm.bind(this);
@@ -41,7 +45,7 @@ export default class UpdateDigitalizacao extends Component{
                     numero: data['numero'],
                     ano: data['ano'],
                     descricao: data['descricao'],
-                    arquivo: data['arquivo'] 
+                    arquivo_original: data['arquivo'] 
                 });
             } else {
                 console.log(problem, data);
@@ -53,29 +57,35 @@ export default class UpdateDigitalizacao extends Component{
         }
     }
 
-    async submitForm() {
+    async submitForm(e) {
+
+        e.preventDefault();
         
         try {
-            const { numero, ano, descricao, arquivo } = this.state;
+            const { _id } = this.props.match.params;
+            const { numero, ano, descricao, arquivo_modificado } = this.state;
 
             const formData = new FormData();
 
             formData.append("numero", numero);
             formData.append("ano", ano);
             formData.append("descricao", descricao);
-            formData.append("arquivo", arquivo);
             
-            const token = await localStorage.getItem('tokenC');
+            if(arquivo_modificado){
+                formData.append("arquivo", arquivo_modificado);
+            }
+            
+            const token = await localStorage.getItem('tokenU');
 
             api.setHeader('Authorization', `JWT ${token}`);
 
-            const response = await api.post('/digitalizacao/', formData);
+            const response = await api.put(`/digitalizacao/${_id}/`, formData);
             
             const { data, ok, problem } = response;
 
             if (ok) {
                 console.log(data);
-                window.location.assign('/');
+                this.props.history.push('/');
             } else {
                 console.log(response);
             }
@@ -87,7 +97,7 @@ export default class UpdateDigitalizacao extends Component{
     render(){
         return (
             <div className="jumbotron my-5">
-                <Form encType="multipart/form-data">
+                <Form encType="multipart/form-data" onSubmit={this.submitForm}>
                     <Form.Group controlId="formBasicNumero">
                         <Form.Label>Numero</Form.Label>
                         <Form.Control type="text" placeholder="Numero"  onChange={
@@ -109,14 +119,14 @@ export default class UpdateDigitalizacao extends Component{
                     <Form.Group controlId="formBasicArquivo">
                         <Form.Label>Arquivo</Form.Label>
                         <div>
-                            atual: {this.state.arquivoModificado? this.state.arquivo.name : this.state.arquivo}
+                            atual: {this.state.arquivo_modificado? this.state.arquivo_modificado.name : this.state.arquivo_original }
                         </div>
                         <Form.Control type="file" placeholder="Arquivo"  onChange={
-                            (event) => this.setState({ arquivo: event.target.files[0] })
+                            (event) => this.setState({ arquivo_modificado: event.target.files[0] })
                         } />
                     </Form.Group>
                     
-                    <Button variant="primary" onClick={this.submitForm}>
+                    <Button variant="primary" type="submit">
                         Submit
                     </Button>
                 </Form>
@@ -124,3 +134,5 @@ export default class UpdateDigitalizacao extends Component{
         );
     }
 }
+
+export default withRouter(UpdateDigitalizacao);

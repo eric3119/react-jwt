@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import List from './list/List';
 
+import {
+    Link
+} from "react-router-dom";
+
 import api from '../../services/api';
 
 class Digitalizacoes extends Component {
@@ -52,9 +56,9 @@ class Digitalizacoes extends Component {
                 <div>
                     <h6><strong>Lista</strong></h6>
                     <hr />
-                    <a href="/novo" className="btn btn-primary">
+                    <Link to="/novo" className="btn btn-primary">
                         <FontAwesomeIcon icon={faPlus} />
-                    </a>
+                    </Link>
                 </div>
                 <List digitalizacoes={this.state.digitalizacoes}/>
             </div>

@@ -3,7 +3,11 @@ import api from '../../../services/api';
 
 import { Form, Button } from 'react-bootstrap';
 
-export default class CreateDigitalizacao extends Component{
+import {
+	withRouter
+} from 'react-router-dom';
+
+class CreateDigitalizacao extends Component{
 
     constructor(props){
         super(props);
@@ -18,7 +22,9 @@ export default class CreateDigitalizacao extends Component{
         this.submitForm = this.submitForm.bind(this);
     }
 
-    async submitForm() {
+    async submitForm(e) {
+
+        e.preventDefault();
         
         try {
             const { numero, ano, descricao, arquivo } = this.state;
@@ -40,7 +46,7 @@ export default class CreateDigitalizacao extends Component{
 
             if (ok) {
                 console.log(data);
-                window.location.assign('/');
+                this.props.history.push('/');
             } else {
                 console.log(response);
             }
@@ -52,7 +58,7 @@ export default class CreateDigitalizacao extends Component{
     render(){
         return (
             <div className="jumbotron my-5">
-                <Form encType="multipart/form-data">
+                <Form encType="multipart/form-data" onSubmit={this.submitForm}>
                     <Form.Group controlId="formBasicNumero">
                         <Form.Label>Numero</Form.Label>
                         <Form.Control type="text" placeholder="Numero"  onChange={
@@ -78,7 +84,7 @@ export default class CreateDigitalizacao extends Component{
                         } />
                     </Form.Group>
                     
-                    <Button variant="primary" onClick={this.submitForm}>
+                    <Button variant="primary" type="submit">
                         Submit
                     </Button>
                 </Form>
@@ -86,3 +92,5 @@ export default class CreateDigitalizacao extends Component{
         );
     }
 }
+
+export default withRouter(CreateDigitalizacao);
