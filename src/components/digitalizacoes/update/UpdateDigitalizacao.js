@@ -81,7 +81,7 @@ class UpdateDigitalizacao extends Component{
 
             const response = await api.put(`/digitalizacao/${_id}/`, formData);
             
-            const { data, ok, problem } = response;
+            const { data, ok } = response;
 
             if (ok) {
                 console.log(data);

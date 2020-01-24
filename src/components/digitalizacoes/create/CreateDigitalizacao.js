@@ -42,7 +42,7 @@ class CreateDigitalizacao extends Component{
 
             const response = await api.post('/digitalizacao/', formData);
             
-            const { data, ok, problem } = response;
+            const { data, ok } = response;
 
             if (ok) {
                 console.log(data);

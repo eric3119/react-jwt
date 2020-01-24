@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Table } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Table } from 'react-bootstrap';
 import api from '../../../services/api';
 
 import {
@@ -17,7 +16,7 @@ class List extends Component {
 
       const response = await api.delete(`/digitalizacao/${id}/`);
 
-      const { data, ok, problem } = response;
+      const { data, ok } = response;
 
       if (ok) {
           console.log(data);

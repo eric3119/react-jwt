@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import api from './services/api';
 
 import {
   BrowserRouter as Router,
@@ -13,34 +12,17 @@ import {
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Container, Alert } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 
 import Header from './components/header/Header';
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
+import RefreshToken from './components/refresh_token/RefreshToken';
 import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
 import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
+import Clock from './components/clock/Clock';
 
 library.add(faCheckCircle, faTrashAlt);
-
-class Clock extends React.Component {
-  format(time) {
-    let seconds = time % 60;
-    let minutes = Math.floor(time / 60);
-    minutes = minutes.toString().length === 1 ? "0" + minutes : minutes;
-    seconds = seconds.toString().length === 1 ? "0" + seconds : seconds;
-    return minutes + ':' + seconds;
-  }
-  render () {
-    const {time} = this.props;
-    return (
-      <div className="displayedTime">
-        <h1>{this.format(time)}</h1>
-      </div>
-    )
-  }
-}
-
 
 export default class App extends Component {
 
@@ -81,18 +63,30 @@ export default class App extends Component {
     const remaining_time = parseInt((localStorage.expiration_time - new Date().getTime()) / 1000);
     await this.setState({ count: remaining_time >= 0 ? remaining_time : 0 })
     
-    this.timer = setInterval(() => {
+    this.timer = setInterval(async () => {
       const newCount = this.state.count - 1;
-      if(newCount <= 60){
-        if(newCount >= 10){
-          this.refreshToken();
-        }else if(window.location.pathname !== "/login"){
-          window.location.assign("/login");
+
+      if(newCount <= 60 && newCount >= 10){
+        
+        this.handleStop();
+
+        if(await window.confirm("refresh token")){
+          await RefreshToken();
+          await this.handleRestart(600);
+        }else{
+          this.handleFullStop();
         }
+        
+      }else{
+        // else if(window.location.pathname !== "/login"){
+        //   window.location.assign("/login");
+        // }
+        
+        this.setState(
+          {count: newCount >= 0 ? newCount : 0}
+        );
       }
-      this.setState(
-        {count: newCount >= 0 ? newCount : 0}
-      );
+
     }, 1000);
   }
   
@@ -103,6 +97,15 @@ export default class App extends Component {
         {running:false}
       );
     }
+  }
+
+  handleFullStop(){
+    this.handleStop();
+    this.handleReset();
+    localStorage.setItem("expiration_time", 0);
+    localStorage.setItem("tokenC", "");
+    localStorage.setItem("tokenR", "");
+    localStorage.setItem("tokenU", "");
   }
   
   handleReset() {
@@ -124,48 +127,6 @@ export default class App extends Component {
     await this.handleCountdown(seconds);
     await this.handleStart();
   }
-
-  async refreshToken(){
-    var r = window.confirm("refresh token");
-    if (r == true) {
-      const tokenC = await localStorage.getItem('tokenC');
-      const tokenR = await localStorage.getItem('tokenR');
-      const tokenU = await localStorage.getItem('tokenU');
-
-      await this.refreshAndStore('tokenC', tokenC);
-      await this.refreshAndStore('tokenR', tokenR);
-      await this.refreshAndStore('tokenU', tokenU);
-
-      const expiration = new Date();
-
-      await localStorage.setItem("expiration_time", (expiration.getTime() + 600000));
-
-      this.handleRestart(600);
-    } else {
-      this.handleStop();
-    }    
-  }
-
-  async refreshAndStore(token_name, token){
-    try {
-        const response = await api.post('/refresh-token/', {
-            token
-        });
-        
-        console.log(response);
-        const { data, problem } = response;
-
-        if (data['token']) {
-            console.log(data);
-            await localStorage.setItem(token_name, data['token']);
-        } else {
-            console.log(problem, data);
-        }
-    } catch (err) {
-        const { data, problem } = err;
-        console.log(problem, data);
-    }
-}
 
   render(){
 

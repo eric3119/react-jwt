@@ -26,26 +26,31 @@ class Auth extends Component{
 
     async onSubmit(e) {
 
-        e.preventDefault();
+        try{
+            e.preventDefault();
 
-        const { startTimer } = this.props;
+            const { startTimer } = this.props;
 
-        const { username_read, password_read } = this.state;
-        const { username_update, password_update } = this.state;
-        const { username_create, password_create } = this.state;
+            const { username_read, password_read } = this.state;
+            const { username_update, password_update } = this.state;
+            const { username_create, password_create } = this.state;
 
-        await this.authenticateAndStore('tokenR', {username: username_read, password: password_read});
-        await this.authenticateAndStore('tokenC', {username: username_create, password: password_create});
-        await this.authenticateAndStore('tokenU', {username: username_update, password: password_update});
+            await this.authenticateAndStore('tokenR', {username: username_read, password: password_read});
+            await this.authenticateAndStore('tokenC', {username: username_create, password: password_create});
+            await this.authenticateAndStore('tokenU', {username: username_update, password: password_update});
+            
+            
+            const expiration = new Date();
+            
+            await localStorage.setItem("expiration_time", (expiration.getTime() + 600000));
+            
+            startTimer(600);
+            
+            this.props.history.push('/');
 
-        
-        const expiration = new Date();
-
-        await localStorage.setItem("expiration_time", (expiration.getTime() + 600000));
-        
-        startTimer(600);
-
-        this.props.history.push('/');
+        }catch(err){
+            console.log(err);
+        }
     }
 
     async authenticateAndStore(token_name, user){
@@ -67,6 +72,8 @@ class Auth extends Component{
         } catch (err) {
             const { data, problem } = err;
             console.log(problem, data);
+
+            throw err;
         }
     }
 
