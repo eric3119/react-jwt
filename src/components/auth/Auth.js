@@ -72,6 +72,7 @@ class Auth extends Component{
         } catch (err) {
             const { data, problem } = err;
             console.log(problem, data);
+            alert(problem, data);
 
             throw err;
         }

@@ -36,6 +36,7 @@ async function refreshAndStore(token_name, token){
     } catch (err) {
         const { data, problem } = err;
         console.log(problem, data);
+        alert(problem, data);
     }
 }
 
