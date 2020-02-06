@@ -17,7 +17,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
-import RefreshToken from './components/refresh_token/refresh_token';
+import RefreshToken from './components/refresh_token/RefreshToken';
 import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
 import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
 
