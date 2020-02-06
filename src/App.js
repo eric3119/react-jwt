@@ -20,7 +20,7 @@ import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigita
 import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
 import Clock from './components/clock/Clock';
 
-import { token_expiration_ms } from '../../constants/constants';
+import { token_expiration_ms } from './constants/constants';
 
 import { Nav, Navbar, Container } from 'react-bootstrap';
 
