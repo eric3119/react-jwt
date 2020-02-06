@@ -14,11 +14,14 @@ import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import Header from './components/header/Header';
+
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
-import RefreshToken from './components/refresh_token/RefreshToken';
+import RefreshToken from './components/refresh_token/refresh_token';
 import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
 import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
+
+
 import Clock from './components/clock/Clock';
 
 import { token_expiration_ms } from './constants/constants';
