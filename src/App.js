@@ -6,21 +6,23 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  // Link
 } from "react-router-dom";
 
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Container } from 'react-bootstrap'
-
-import Header from './components/header/Header';
+// import Header from './components/header/Header';
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
 import RefreshToken from './components/refresh_token/RefreshToken';
 import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
 import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
 import Clock from './components/clock/Clock';
+
+import { token_expiration_ms } from '../../constants/constants';
+
+import { Nav, Navbar, Container } from 'react-bootstrap';
 
 library.add(faCheckCircle, faTrashAlt);
 
@@ -71,8 +73,13 @@ export default class App extends Component {
         this.handleStop();
 
         if(await window.confirm("refresh token")){
-          await RefreshToken();
-          await this.handleRestart(600);
+          try {
+            await RefreshToken();
+            await this.handleRestart(token_expiration_ms / 1000);            
+          } catch (error) {
+            window.location.assign('/login');
+            alert(error);
+          }
         }else{
           this.handleFullStop();
         }
@@ -138,20 +145,23 @@ export default class App extends Component {
 
     return (
       <>
-        <Header />
-        <Clock time={count}/>
         <Router>
-          <div>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/login">Login</Link>
-                </li>
-              </ul>
-            </nav>
+        <Nav variant="tabs" defaultActiveKey="/home">
+            <Navbar.Brand>
+              JWT Test
+            </Navbar.Brand>
+            <Nav.Item>
+              <Nav.Link href="/">
+                Home
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/login">
+                Login
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+          <Clock time={count}/>
 
             {/* A <Switch> looks through its children <Route>s and
                 renders the first one that matches the current URL. */}
@@ -169,21 +179,7 @@ export default class App extends Component {
                 </Route>
               </Switch>
             </Container>
-          </div>
         </Router>
-        <div style={{fontSize: 18}}>
-          JWT user para Visualização <br />
-          usuario: usuario_visualizacao<br />
-          senha: Visualizador1234<br /><br />
-
-          JWT user para Atualização<br />
-          usuario: usuario_atualizacao<br />
-          senha: Atualizacao1234<br /><br />
-
-          JWT user para Cadastro<br />
-          usuario: usuario_insercao<br />
-          senha: Insercao1234<br />
-        </div>      
       </>
     );
   }

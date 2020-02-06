@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import api from '../../services/api';
+import { token_expiration_ms } from '../../constants/constants';
 
 import { Form, Button } from 'react-bootstrap';
 
@@ -42,9 +43,9 @@ class Auth extends Component{
             
             const expiration = new Date();
             
-            await localStorage.setItem("expiration_time", (expiration.getTime() + 600000));
+            await localStorage.setItem("expiration_time", (expiration.getTime() + token_expiration_ms));
             
-            startTimer(600);
+            startTimer(token_expiration_ms / 1000);
             
             this.props.history.push('/');
 
