@@ -6,13 +6,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
+  // Link
 } from "react-router-dom";
 
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Nav, Navbar, Container } from 'react-bootstrap';
+// import Header from './components/header/Header';
+
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
 import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
@@ -21,6 +22,10 @@ import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigita
 
 import Clock from './components/clock/Clock';
 import RefreshToken from './components/refresh_token/refresh_token';
+
+import { token_expiration_ms } from './constants/constants';
+
+import { Nav, Navbar, Container } from 'react-bootstrap';
 
 library.add(faCheckCircle, faTrashAlt);
 
@@ -32,6 +37,103 @@ export default class App extends Component {
     this.state = {
       count: 0,
     };
+
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+
+  async componentDidMount(prevProps, prevState){
+
+    if(prevState){
+      if(this.state.running !== prevState.running){
+        if(this.state.running) {
+          this.handleStart();
+        }
+      }
+    }else{
+      this.handleStart();
+    }
+
+    if (window.location.pathname !== '/login'){
+      if(await localStorage.getItem('token') === ''){
+        window.location.assign('/login');
+      }
+    }
+    this.setState({isLoading:false});
+  }
+
+  async handleStart() {
+  
+    const remaining_time = parseInt((localStorage.expiration_time - new Date().getTime()) / 1000);
+    await this.setState({ count: remaining_time >= 0 ? remaining_time : 0 })
+    
+    this.timer = setInterval(async () => {
+      const newCount = this.state.count - 1;
+
+      if(newCount <= 60 && newCount >= 10){
+        
+        this.handleStop();
+
+        if(await window.confirm("refresh token")){
+          try {
+            await RefreshToken();
+            await this.handleRestart(token_expiration_ms / 1000);            
+          } catch (error) {
+            window.location.assign('/login');
+            alert(error);
+          }
+        }else{
+          this.handleFullStop();
+        }
+        
+      }else{
+        // else if(window.location.pathname !== "/login"){
+        //   window.location.assign("/login");
+        // }
+        
+        this.setState(
+          {count: newCount >= 0 ? newCount : 0}
+        );
+      }
+
+    }, 1000);
+  }
+  
+  handleStop() {
+    if(this.timer) {
+      clearInterval(this.timer);
+      this.setState(
+        {running:false}
+      );
+    }
+  }
+
+  handleFullStop(){
+    this.handleStop();
+    this.handleReset();
+    localStorage.setItem("expiration_time", 0);
+    localStorage.setItem("tokenC", "");
+    localStorage.setItem("tokenR", "");
+    localStorage.setItem("tokenU", "");
+  }
+  
+  handleReset() {
+    this.setState(
+      {count: 0}
+    );
+  }
+
+  handleCountdown(seconds) {
+    this.setState({
+      count: seconds,
+      running: true
+    })
+  }
+  
+  async handleRestart(seconds){
+    await this.handleStop();
+    await this.handleReset();
+    await this.handleCountdown(seconds);
+    await this.handleStart();
   }
 
   render(){
@@ -40,22 +142,23 @@ export default class App extends Component {
     return (
       <>
         <Router>
-          <Nav variant="tabs" defaultActiveKey="/home">
+        <Nav variant="tabs" defaultActiveKey="/home">
             <Navbar.Brand>
               JWT Test
             </Navbar.Brand>
             <Nav.Item>
-              <Nav.Link>
-                <Link to="/">Home</Link>
+              <Nav.Link href="/">
+                Home
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link>
-                <Link to="/login">Login</Link>
+              <Nav.Link href="/login">
+                Login
               </Nav.Link>
             </Nav.Item>
           </Nav>
           <Clock time={count}/>
+
             {/* A <Switch> looks through its children <Route>s and
                 renders the first one that matches the current URL. */}
             <Container>

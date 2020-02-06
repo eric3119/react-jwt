@@ -6,27 +6,27 @@ import {
   Link
 } from "react-router-dom";
 
-class List extends Component {
+class ListDigitalizacao extends Component {
 
   async deleteDigitalizacao(id){
-    try {
-      const token = await localStorage.getItem('tokenC');
+    // try {
+    //   const token = await localStorage.getItem('tokenD');
 
-      api.setHeader('Authorization', `JWT ${token}`);
+    //   api.setHeader('Authorization', `JWT ${token}`);
 
-      const response = await api.delete(`/digitalizacao/${id}/`);
+    //   const response = await api.delete(`/digitalizacao/${id}/`);
 
-      const { data, ok } = response;
+    //   const { data, ok } = response;
 
-      if (ok) {
-          console.log(data);
-          window.location.reload();
-      } else {
-          console.log(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (ok) {
+    //       console.log(data);
+    //       window.location.reload();
+    //   } else {
+    //       console.log(response);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   render() {
@@ -57,4 +57,4 @@ class List extends Component {
   }
 }
    
-   export default List;
+   export default ListDigitalizacao;

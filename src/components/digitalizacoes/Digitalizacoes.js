@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import List from './list/List';
+import ListDigitalizacao from './list/ListDigitalizacao';
 
 import {
     Link
@@ -60,7 +60,7 @@ class Digitalizacoes extends Component {
                         <FontAwesomeIcon icon={faPlus} />
                     </Link>
                 </div>
-                <List digitalizacoes={this.state.digitalizacoes}/>
+                <ListDigitalizacao digitalizacoes={this.state.digitalizacoes}/>
             </div>
         );
     }
