@@ -13,12 +13,15 @@ import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import Header from './components/header/Header';
+
 import Digitalizacoes from './components/digitalizacoes/Digitalizacoes';
 import Auth from './components/auth/Auth';
-import RefreshToken from './components/refresh_token/RefreshToken';
 import CreateDigitalizacao from './components/digitalizacoes/create/CreateDigitalizacao';
 import UpdateDigitalizacao from './components/digitalizacoes/update/UpdateDigitalizacao';
+
+
 import Clock from './components/clock/Clock';
+import RefreshToken from './components/refresh_token/refresh_token';
 
 import { token_expiration_ms } from './constants/constants';
 
@@ -32,9 +35,7 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      isLoading: true,
       count: 0,
-      running: false,
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -136,11 +137,6 @@ export default class App extends Component {
   }
 
   render(){
-
-    if(this.state.isLoading){
-      return <div>loading</div>
-    }
-
     const {count} = this.state;
 
     return (
@@ -175,6 +171,7 @@ export default class App extends Component {
                 </Route>
                 <Route path="/update/:_id/" component={UpdateDigitalizacao} />
                 <Route path="/">
+                  {/* <RefreshToken/> */}
                   <Digitalizacoes />
                 </Route>
               </Switch>
