@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Provider } from 'react-redux';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -144,43 +145,40 @@ export default class App extends Component {
     const {count} = this.state;
 
     return (
-      <>
-        <Router>
+      <Router>
         <Nav variant="tabs" defaultActiveKey="/home">
-            <Navbar.Brand>
-              JWT Test
-            </Navbar.Brand>
-            <Nav.Item>
-              <Nav.Link href="/">
-                Home
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/login">
-                Login
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-          <Clock time={count}/>
-
-            {/* A <Switch> looks through its children <Route>s and
-                renders the first one that matches the current URL. */}
-            <Container>
-              <Switch>
-                <Route path="/login">
-                  <Auth startTimer={ (value) => { this.handleRestart(value) } } />
-                </Route>
-                <Route path="/novo">
-                  <CreateDigitalizacao />
-                </Route>
-                <Route path="/update/:_id/" component={UpdateDigitalizacao} />
-                <Route path="/">
-                  <Digitalizacoes />
-                </Route>
-              </Switch>
-            </Container>
-        </Router>
-      </>
+          <Navbar.Brand>
+            JWT Test
+          </Navbar.Brand>
+          <Nav.Item>
+            <Nav.Link href="/">
+              Home
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/login">
+              Login
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <Clock time={count}/>
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        <Container>
+          <Switch>
+            <Route path="/login">
+              <Auth startTimer={ (value) => { this.handleRestart(value) } } />
+            </Route>
+            <Route path="/novo">
+              <CreateDigitalizacao />
+            </Route>
+            <Route path="/update/:_id/" component={UpdateDigitalizacao} />
+            <Route path="/">
+              <Digitalizacoes />
+            </Route>
+          </Switch>
+        </Container>
+      </Router>
     );
   }
 }

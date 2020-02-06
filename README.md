@@ -14,8 +14,11 @@ JWT
         ex.: 
             token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.
             eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6InVzdWFyaW9fdmlzdWFsaXphY2FvIiwiZXhwIjoxNTc4NDEzNjQyLCJlbWFpbCI6IiIsIm9yaWdfaWF0IjoxNTc4NDEzMzQyfQ.
-            Bx7TcTfTNZdEh7xzSAugvEhVqiOa1EjQPOZ2zakH4ns
+            Bx7TcTfTNZdEh7xzSAugvEhVqiOa1EjQPOZ2zakH4ns<br /><br />
             api.setHeader('Authorization', `JWT ${token}`);
+
+Armazenamento JWT:
+ - localStorage
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
