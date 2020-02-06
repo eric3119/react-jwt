@@ -10,9 +10,11 @@ JWT
 - Tempo de expiração do Token / tempo para renovar o Token = 10 minutos
 - Tempo total de renovação do Token = 15 dias
 - Requisição usando o Token: 
-    - Adicionar o Token no cabeçalho da requisição, após a sigla JWT
+    - Adicionar o Token no cabeçalho da requisição, após a sigla JWT<br />
         ex.: 
-            token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6InVzdWFyaW9fdmlzdWFsaXphY2FvIiwiZXhwIjoxNTc4NDEzNjQyLCJlbWFpbCI6IiIsIm9yaWdfaWF0IjoxNTc4NDEzMzQyfQ.Bx7TcTfTNZdEh7xzSAugvEhVqiOa1EjQPOZ2zakH4ns
+            token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.
+            eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6InVzdWFyaW9fdmlzdWFsaXphY2FvIiwiZXhwIjoxNTc4NDEzNjQyLCJlbWFpbCI6IiIsIm9yaWdfaWF0IjoxNTc4NDEzMzQyfQ.
+            Bx7TcTfTNZdEh7xzSAugvEhVqiOa1EjQPOZ2zakH4ns
             api.setHeader('Authorization', `JWT ${token}`);
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
